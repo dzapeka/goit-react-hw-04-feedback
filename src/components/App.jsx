@@ -1,39 +1,45 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import FeedbackOptions from './FeedbackOptions';
 import Section from './Section';
 import Statistics from './Statistics';
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      good: 0,
-      neutral: 0,
-      bad: 0,
-    };
-  }
+const App = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
-  onLeaveFeedback = option => {
-    this.setState(state => ({
-      [option]: state[option] + 1,
-    }));
+  const onLeaveFeedback = option => {
+    switch (option) {
+      case 'good': {
+        setGood(good + 1);
+        break;
+      }
+      case 'neutral': {
+        setNeutral(neutral + 1);
+        break;
+      }
+      case 'bad': {
+        setBad(bad + 1);
+        break;
+      }
+      default: {
+      }
+    }
   };
 
-  render() {
-    const options = Object.keys(this.state);
+  return (
+    <>
+      <Section title="Please leave feedback">
+        <FeedbackOptions
+          options={['good', 'neutral', 'bad']}
+          onLeaveFeedback={onLeaveFeedback}
+        />
+      </Section>
+      <Section title="Statistics">
+        <Statistics data={{ good, neutral, bad }} />
+      </Section>
+    </>
+  );
+};
 
-    return (
-      <>
-        <Section title="Please leave feedback">
-          <FeedbackOptions
-            options={options}
-            onLeaveFeedback={this.onLeaveFeedback}
-          />
-        </Section>
-        <Section title="Statistics">
-          <Statistics {...this.state} />
-        </Section>
-      </>
-    );
-  }
-}
+export default App;
